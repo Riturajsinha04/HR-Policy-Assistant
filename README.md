@@ -1,31 +1,31 @@
-# Enso Group HR Policy Assistant 🏢
+# Enso Group HR Policy Assistant
 
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![LangChain](https://img.shields.io/badge/LangChain-v1.4+-1C3C3C?style=for-the-badge&logo=chainlink&logoColor=white)](https://www.langchain.com/)
 [![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector_Store-FF6F00?style=for-the-badge)](https://www.trychroma.com/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-Interactive_UI-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
-[![Google Gemini](https://img.shields.io/badge/Google_Gemini-2.0_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
+[![Google Gemini](https://img.shields.io/badge/Google_Gemini-3.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 
 > An enterprise-grade, strictly grounded Retrieval-Augmented Generation (RAG) system answering human resources queries exclusively from the 79-page **Enso Group HR Policy Manual**. Developed as a submission for the Generative AI Mid-Semester Examination.
 
 ---
 
-## 📋 Table of Contents
-1. [Problem Statement & Objective](#-problem-statement--objective)
-2. [Key Features](#-key-features)
-3. [Architecture & Data Flow](#-architecture--data-flow)
-4. [Tech Stack](#-tech-stack)
-5. [Project Structure](#-project-structure)
-6. [Quickstart & Setup](#-quickstart--setup)
-7. [How It Works (Deep Dive)](#-how-it-works-deep-dive)
-8. [Exam Q&A Evaluation Results](#-exam-qa-evaluation-results)
-9. [UI Preview & Verification](#-ui-preview--verification)
-10. [Design Decisions & Trade-offs](#-design-decisions--trade-offs)
-11. [Author & Academic Details](#-author--academic-details)
+## Table of Contents
+1. [Problem Statement & Objective](#problem-statement--objective)
+2. [Key Features](#key-features)
+3. [Architecture & Data Flow](#architecture--data-flow)
+4. [Tech Stack](#tech-stack)
+5. [Project Structure](#project-structure)
+6. [Quickstart & Setup](#quickstart--setup)
+7. [How It Works (Deep Dive)](#how-it-works-deep-dive)
+8. [Exam Q&A Evaluation Results](#exam-qa-evaluation-results)
+9. [UI Preview & Verification](#ui-preview--verification)
+10. [Design Decisions & Trade-offs](#design-decisions--trade-offs)
+11. [Author & Academic Details](#author--academic-details)
 
 ---
 
-## 🎯 Problem Statement & Objective
+## Problem Statement & Objective
 
 In corporate human resource management, employees often struggle to find authoritative answers to policy questions regarding leave entitlements, probation rules, maternity benefits, and conduct codes within lengthy employee handbooks. Hallucinations or reliance on external unverified information in an HR context can lead to legal liability and employee dissatisfaction.
 
@@ -37,7 +37,7 @@ In corporate human resource management, employees often struggle to find authori
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - **Strict Grounding with Two-Layer Defense**:
   - *Layer 1 (Retrieval Filter)*: Chunks failing minimum cosine relevance threshold are immediately rejected.
@@ -54,7 +54,7 @@ In corporate human resource management, employees often struggle to find authori
 
 ---
 
-## 🏗️ Architecture & Data Flow
+## Architecture & Data Flow
 
 ### Mermaid Flowchart
 
@@ -124,7 +124,7 @@ flowchart TD
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Component | Technology | Version / Model | Rationale |
 | :--- | :--- | :--- | :--- |
@@ -139,7 +139,7 @@ flowchart TD
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 hr-policy-assistant/
@@ -174,7 +174,7 @@ hr-policy-assistant/
 
 ---
 
-## 🚀 Quickstart & Setup
+## Quickstart & Setup
 
 ### 1. Prerequisites
 - Python 3.11 or higher installed.
@@ -237,7 +237,7 @@ pytest tests/test_questions.py -v
 
 ---
 
-## 🔍 How It Works (Deep Dive)
+## How It Works (Deep Dive)
 
 ### 1. Ingestion & Table Preservation
 - **Block Reordering & Cleaning**: PyMuPDF extracts blocks in reading order. Non-standard Unicode artifacts (such as bullets `Ԃ` and `¤`) are converted to clean hyphens. Hyphenated splits (e.g. `ap-\nproved`) are merged.
@@ -266,21 +266,21 @@ Using `src/section_map.py`, every page is cataloged:
 
 ---
 
-## 📊 Exam Q&A Evaluation Results
+## Exam Q&A Evaluation Results
 
 The table below demonstrates the system's performance on the 5 mandatory exam questions:
 
 | # | Question | System Answer | Cited Reference | Ground Truth Match |
 |---|----------|---------------|-----------------|:------------------:|
-| **Q1** | How many days of Privilege Leave (PL) does a permanent employee get per year? | Permanent employees are entitled to 12 days of Privilege Leave (PL) per calendar year (1st January to 31st December). Unavailed PL cannot be accumulated or carried forward. | Annexure III → [G] Leave Policy, Page 60 | ✅ Exact Match |
-| **Q2** | What is the probation period for employees up to Senior Manager? | The probation period for employees up to the level of Senior Manager is 3 months from the date of joining. | Annexure I → [B] Probation Policy, Page 42 | ✅ Exact Match |
-| **Q3** | What is the company's health-insurance premium amount? | Not found | None | ✅ Exact Match |
-| **Q4** | What is the current GST rate in India? | Not found | None | ✅ Exact Match |
-| **Q5** | How many days of maternity leave are given? | Eligible female employees are entitled to 12 weeks (90 days) of paid maternity leave, of which not more than 6 weeks (45 days) shall precede the date of expected delivery. | Annexure III → [G] Leave Policy, Page 62 | ✅ Exact Match |
+| **Q1** | How many days of Privilege Leave (PL) does a permanent employee get per year? | Permanent employees are entitled to 12 days of Privilege Leave (PL) per calendar year (1st January to 31st December). Unavailed PL cannot be accumulated or carried forward. | Annexure III → [G] Leave Policy, Page 60 | Exact Match |
+| **Q2** | What is the probation period for employees up to Senior Manager? | The probation period for employees up to the level of Senior Manager is 3 months from the date of joining. | Annexure I → [B] Probation Policy, Page 42 | Exact Match |
+| **Q3** | What is the company's health-insurance premium amount? | Not found | None | Exact Match |
+| **Q4** | What is the current GST rate in India? | Not found | None | Exact Match |
+| **Q5** | How many days of maternity leave are given? | Eligible female employees are entitled to 12 weeks (90 days) of paid maternity leave, of which not more than 6 weeks (45 days) shall precede the date of expected delivery. | Annexure III → [G] Leave Policy, Page 62 | Exact Match |
 
 ---
 
-## 🖼️ UI Preview & Verification
+## UI Preview & Verification
 
 The application features a modern Streamlit interface designed for auditability and compliance:
 
@@ -314,7 +314,7 @@ The application features a modern Streamlit interface designed for auditability 
 
 ---
 
-## ⚖️ Design Decisions & Trade-offs
+## Design Decisions & Trade-offs
 
 1. **Local vs. Cloud Embeddings**:
    - *Choice*: Used `sentence-transformers/all-MiniLM-L6-v2` locally via HuggingFace rather than cloud embedding APIs.
@@ -332,7 +332,7 @@ The application features a modern Streamlit interface designed for auditability 
 
 ---
 
-## 👨‍💻 Author & Academic Details
+## Author & Academic Details
 
 - **Student Name**: Rituraj Sinha
 - **Course**: Generative AI Mid-Semester Examination

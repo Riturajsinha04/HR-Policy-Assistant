@@ -1,6 +1,6 @@
 """
-Enso Group HR Policy Assistant
-A strictly grounded enterprise RAG system for corporate HR policies.
+Enso Group HR Policy Assistant - Enterprise Edition
+A production-ready, strictly grounded RAG system for corporate HR governance.
 """
 
 import importlib
@@ -36,13 +36,14 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ── Minimalist Corporate Theme (No Emojis, Clean Typography) ───────
+# ── Enterprise Styling & Modern Web Theme ───────────────────────────
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
+    /* Global Typography */
     html, body, [class*="css"] {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
     }
 
     /* Hide Unwanted Streamlit Chrome */
@@ -54,201 +55,316 @@ st.markdown("""
     [data-testid="stDecoration"] { display: none !important; }
     [data-testid="stStatusWidget"] { display: none !important; }
 
-    /* Layout Spacing */
+    /* Main Container Padding */
     .block-container {
-        padding-top: 2rem !important;
+        padding-top: 1.5rem !important;
         padding-bottom: 3rem !important;
-        max-width: 900px !important;
+        max-width: 1050px !important;
     }
 
-    /* Top Corporate Header */
-    .corporate-header {
+    /* Enterprise Navigation Header */
+    .enterprise-nav {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-bottom: 1.25rem;
-        margin-bottom: 2rem;
-        border-bottom: 1px solid #1e293b;
+        padding: 0.85rem 1.5rem;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(51, 65, 85, 0.7);
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.25);
     }
-    .corporate-title {
-        font-size: 1.15rem;
+    .brand-group {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+    }
+    .brand-logo-pill {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 0.85rem;
+        letter-spacing: 0.08em;
+        padding: 0.35rem 0.75rem;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
+    }
+    .brand-title {
+        font-size: 1.05rem;
         font-weight: 700;
         color: #f8fafc;
-        letter-spacing: -0.01em;
         margin: 0;
+        letter-spacing: -0.01em;
     }
-    .corporate-subtitle {
-        font-size: 0.8rem;
-        color: #64748b;
-        margin: 0.15rem 0 0 0;
+    .brand-subtitle {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        margin: 0;
+        font-weight: 400;
     }
-    .corporate-badge {
-        font-size: 0.72rem;
+    .nav-status-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(16, 185, 129, 0.12);
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        color: #34d399;
+        font-size: 0.75rem;
         font-weight: 600;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        color: #10b981;
-        background: rgba(16, 185, 129, 0.1);
-        border: 1px solid rgba(16, 185, 129, 0.25);
-        padding: 0.25rem 0.65rem;
-        border-radius: 4px;
+        padding: 0.35rem 0.85rem;
+        border-radius: 20px;
+    }
+    .status-dot {
+        width: 7px;
+        height: 7px;
+        background: #10b981;
+        border-radius: 50%;
+        box-shadow: 0 0 8px #10b981;
     }
 
-    /* Empty State */
-    .empty-state {
+    /* Welcome Hero Card (Empty State) */
+    .hero-card {
+        background: linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
+        border: 1px solid #334155;
+        border-radius: 14px;
+        padding: 2.2rem 2rem;
+        margin-bottom: 1.5rem;
         text-align: center;
-        padding: 3rem 1rem 2rem 1rem;
-        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
     }
-    .empty-state-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #f1f5f9;
-        letter-spacing: -0.02em;
+    .hero-title {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #f8fafc;
         margin-bottom: 0.5rem;
+        letter-spacing: -0.02em;
     }
-    .empty-state-desc {
-        font-size: 0.9rem;
+    .hero-description {
+        font-size: 0.95rem;
         color: #94a3b8;
-        max-width: 520px;
-        margin: 0 auto;
+        max-width: 650px;
+        margin: 0 auto 1.6rem auto;
         line-height: 1.6;
     }
-
-    /* Answer Containers */
-    .answer-box-found {
-        background: #090d16;
-        border: 1px solid #1e293b;
-        border-left: 3px solid #10b981;
-        border-radius: 6px;
-        padding: 1.2rem 1.4rem;
-        margin: 0.5rem 0 1rem 0;
+    .pillars-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.85rem;
+        margin-top: 1rem;
     }
-    .answer-box-notfound {
-        background: #090d16;
-        border: 1px solid #1e293b;
-        border-left: 3px solid #f59e0b;
-        border-radius: 6px;
-        padding: 1.2rem 1.4rem;
-        margin: 0.5rem 0 1rem 0;
+    .pillar-item {
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(51, 65, 85, 0.7);
+        border-radius: 10px;
+        padding: 0.9rem 0.8rem;
+        text-align: left;
+        transition: all 0.2s ease;
     }
-    .answer-label-found {
-        font-size: 0.7rem;
+    .pillar-tag {
+        font-size: 0.65rem;
         font-weight: 700;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.08em;
+        color: #3b82f6;
+        margin-bottom: 0.35rem;
         text-transform: uppercase;
-        color: #10b981;
-        margin-bottom: 0.5rem;
     }
-    .answer-label-notfound {
-        font-size: 0.7rem;
+    .pillar-title {
         font-weight: 700;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: #f59e0b;
-        margin-bottom: 0.5rem;
-    }
-    .answer-body {
-        font-size: 0.95rem;
-        line-height: 1.65;
+        font-size: 0.82rem;
         color: #e2e8f0;
-        margin-bottom: 0.85rem;
+        margin-bottom: 0.15rem;
     }
-    .citation-strip {
+    .pillar-sub {
+        font-size: 0.72rem;
+        color: #64748b;
+        line-height: 1.35;
+    }
+
+    /* Answer Cards */
+    .enterprise-answer-found {
+        background: #0f172a;
+        border: 1px solid #1e293b;
+        border-left: 4px solid #10b981;
+        border-radius: 10px;
+        padding: 1.25rem 1.5rem;
+        margin: 0.5rem 0 1rem 0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .enterprise-answer-notfound {
+        background: #0f172a;
+        border: 1px solid #1e293b;
+        border-left: 4px solid #f59e0b;
+        border-radius: 10px;
+        padding: 1.25rem 1.5rem;
+        margin: 0.5rem 0 1rem 0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .badge-enterprise-found {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399 !important;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        padding: 0.25rem 0.65rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-bottom: 0.75rem;
+    }
+    .badge-enterprise-notfound {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: rgba(245, 158, 11, 0.15);
+        color: #fbbf24 !important;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        padding: 0.25rem 0.65rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-bottom: 0.75rem;
+    }
+    .answer-text {
+        color: #f1f5f9 !important;
+        font-size: 0.98rem;
+        line-height: 1.65;
+        font-weight: 400;
+        margin: 0 0 0.85rem 0;
+    }
+    .citation-bar {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 0.6rem;
-        padding-top: 0.65rem;
-        border-top: 1px solid #1e293b;
+        gap: 0.5rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid rgba(51, 65, 85, 0.6);
+        margin-top: 0.75rem;
     }
-    .citation-link {
-        font-size: 0.78rem;
-        color: #38bdf8;
-        font-weight: 500;
+    .citation-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: rgba(30, 58, 138, 0.35);
+        border: 1px solid rgba(96, 165, 250, 0.3);
+        color: #93c5fd;
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.25rem 0.65rem;
+        border-radius: 6px;
     }
-    .latency-pill {
-        font-size: 0.72rem;
+    .citation-tag-amber {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: rgba(120, 53, 15, 0.25);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        color: #fde68a;
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.25rem 0.65rem;
+        border-radius: 6px;
+    }
+    .metadata-pill {
         color: #64748b;
-        margin-left: auto;
+        font-size: 0.75rem;
         font-family: 'JetBrains Mono', monospace;
     }
 
-    /* Evidence Excerpts */
-    .excerpt-box {
-        background: #050811;
+    /* Evidence Drawer */
+    .evidence-card {
+        background: #090d16;
         border: 1px solid #1e293b;
-        border-radius: 4px;
-        padding: 0.75rem 0.9rem;
-        margin-bottom: 0.5rem;
+        border-radius: 8px;
+        padding: 0.85rem 1rem;
+        margin-bottom: 0.6rem;
     }
-    .excerpt-header {
+    .evidence-meta {
         display: flex;
         justify-content: space-between;
-        font-size: 0.72rem;
+        color: #38bdf8;
         font-weight: 600;
-        color: #64748b;
+        font-size: 0.75rem;
         margin-bottom: 0.35rem;
         font-family: 'JetBrains Mono', monospace;
     }
-    .excerpt-text {
-        font-size: 0.82rem;
+    .evidence-body {
         color: #94a3b8;
+        font-size: 0.82rem;
         line-height: 1.5;
         white-space: pre-wrap;
     }
 
-    /* Sidebar Styling */
+    /* Sidebar Customization */
     [data-testid="stSidebar"] {
         background: #090d16 !important;
         border-right: 1px solid #1e293b !important;
     }
     [data-testid="stSidebar"] hr {
-        margin: 1.25rem 0 !important;
+        margin: 1rem 0 !important;
         border-color: #1e293b !important;
     }
-    .sidebar-heading {
-        font-size: 0.7rem;
+    .sidebar-section-title {
+        font-size: 0.75rem;
         font-weight: 700;
-        letter-spacing: 0.08em;
         text-transform: uppercase;
+        letter-spacing: 0.08em;
         color: #64748b;
         margin-bottom: 0.65rem;
     }
-    .sidebar-brand-name {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: #f8fafc;
-        letter-spacing: -0.01em;
-        margin: 0;
+    .sidebar-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        margin-bottom: 0.25rem;
     }
-    .sidebar-brand-sub {
-        font-size: 0.75rem;
+    .sidebar-stat-card {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid #1e293b;
+        border-radius: 8px;
+        padding: 0.65rem 0.85rem;
+        margin-bottom: 0.5rem;
+    }
+    .stat-label {
+        font-size: 0.7rem;
         color: #64748b;
-        margin: 0.15rem 0 1rem 0;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .stat-value {
+        font-size: 0.85rem;
+        color: #e2e8f0;
+        font-weight: 600;
+        font-family: 'JetBrains Mono', monospace;
     }
 
-    /* Action Buttons */
+    /* Buttons in sidebar */
     .stButton > button {
-        background: #0f172a !important;
+        background: rgba(15, 23, 42, 0.6) !important;
         border: 1px solid #1e293b !important;
         color: #cbd5e1 !important;
         font-size: 0.8rem !important;
         font-weight: 500 !important;
-        border-radius: 6px !important;
-        padding: 0.45rem 0.75rem !important;
-        transition: all 0.15s ease !important;
+        border-radius: 8px !important;
+        padding: 0.5rem 0.75rem !important;
+        transition: all 0.2s ease !important;
         text-align: left !important;
     }
     .stButton > button:hover {
-        background: #1e293b !important;
-        border-color: #334155 !important;
+        background: rgba(30, 41, 59, 0.8) !important;
+        border-color: #3b82f6 !important;
         color: #ffffff !important;
     }
 
-    /* Chat Input */
+    /* Input box */
     [data-testid="stChatInput"] {
-        border-radius: 8px !important;
+        border-radius: 10px !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -273,22 +389,26 @@ def load_store():
 
 store, doc_count = load_store()
 
-# ── Minimalist Corporate Header ─────────────────────────────────────
+# ── Enterprise Top Navigation Bar ───────────────────────────────────
 st.markdown("""
-<div class="corporate-header">
-    <div>
-        <h1 class="corporate-title">Enso Group HR Policy Assistant</h1>
-        <p class="corporate-subtitle">Corporate Policy & Compliance Knowledge Base (79 Pages)</p>
+<div class="enterprise-nav">
+    <div class="brand-group">
+        <div class="brand-logo-pill">ENSO</div>
+        <div>
+            <h1 class="brand-title">HR Policy Assistant</h1>
+            <p class="brand-subtitle">Enterprise Governance & Compliance Knowledge Hub</p>
+        </div>
     </div>
-    <div class="corporate-badge">
-        Strict Grounding Active
+    <div class="nav-status-badge">
+        <div class="status-dot"></div>
+        <span>Strict Grounding Active (79 Pages)</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
 # ── Answer Renderer ─────────────────────────────────────────────────
 def render_answer(msg: dict, msg_idx: int) -> None:
-    """Renders a clean corporate answer card without emojis."""
+    """Renders a polished corporate answer card with citations, evidence, and PDF view."""
     result = msg.get("result", {})
     found = result.get("found", False)
     answer = result.get("answer", msg.get("content", ""))
@@ -306,49 +426,53 @@ def render_answer(msg: dict, msg_idx: int) -> None:
         main_answer = parts[0]
         ref_text = parts[1] if len(parts) > 1 else ""
 
-        citation_html = ""
+        citation_chips = ""
         if citations:
-            refs = [f"{c.get('section', 'Section')} > {c.get('policy', 'Policy')}, Page {c.get('page', '?')}" for c in citations]
-            citation_html = f'<div class="citation-link">Reference: {"; ".join(refs)}</div>'
+            for c in citations:
+                citation_chips += f'<div class="citation-tag">{c.get("section", "Section")} &gt; {c.get("policy", "Policy")} (Page {c.get("page", "?")})</div>'
         elif ref_text:
-            citation_html = f'<div class="citation-link">Reference: {ref_text}</div>'
+            citation_chips = f'<div class="citation-tag">{ref_text}</div>'
 
         st.markdown(f"""
-        <div class="answer-box-found">
-            <div class="answer-label-found">Verified Policy Directive</div>
-            <div class="answer-body">{main_answer}</div>
-            <div class="citation-strip">
-                {citation_html}
-                <div class="latency-pill">{latency}s</div>
+        <div class="enterprise-answer-found">
+            <div class="badge-enterprise-found">
+                <span>●</span> VERIFIED POLICY CLAUSE
+            </div>
+            <div class="answer-text">{main_answer}</div>
+            <div class="citation-bar">
+                {citation_chips}
+                <div class="metadata-pill" style="margin-left: auto;">{latency}s latency</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
     else:
         st.markdown(f"""
-        <div class="answer-box-notfound">
-            <div class="answer-label-notfound">Policy Not Found</div>
-            <div class="answer-body"><strong>Not found</strong></div>
-            <div class="citation-strip">
-                <div class="citation-link" style="color:#94a3b8;">Out-of-document queries are prohibited by compliance protocol.</div>
-                <div class="latency-pill">{latency}s</div>
+        <div class="enterprise-answer-notfound">
+            <div class="badge-enterprise-notfound">
+                <span>●</span> POLICY CLAUSE NOT SPECIFIED
+            </div>
+            <div class="answer-text"><strong>Not found</strong></div>
+            <div class="citation-bar">
+                <div class="citation-tag-amber">Out-of-Document Restriction Enforced</div>
+                <div class="metadata-pill" style="margin-left: auto;">{latency}s verification</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-    # Retrieved Evidence Accordion
+    # Retrieved Evidence Drawer
     if st.session_state.show_evidence and chunks:
-        with st.expander(f"Retrieved Policy Passages ({len(chunks)})", expanded=False):
+        with st.expander(f"Audit Trail: Inspect {len(chunks)} Retrieved Policy Passages", expanded=False):
             for i, (doc, score) in enumerate(chunks):
                 meta = doc.metadata
                 match_pct = int(score * 100)
                 st.markdown(f"""
-                <div class="excerpt-box">
-                    <div class="excerpt-header">
-                        <span>Passage {i+1} · Page {meta.get("page", "?")} · {meta.get("section", "?")}</span>
+                <div class="evidence-card">
+                    <div class="evidence-meta">
+                        <span>Chunk #{i+1} · Page {meta.get("page", "?")} · {meta.get("section", "?")}</span>
                         <span>Relevance: {match_pct}%</span>
                     </div>
-                    <div class="excerpt-text">{doc.page_content}</div>
+                    <div class="evidence-body">{doc.page_content}</div>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -356,27 +480,30 @@ def render_answer(msg: dict, msg_idx: int) -> None:
     if found and citations:
         cited_pages = sorted(set(c["page"] for c in citations))
         for p in cited_pages:
-            with st.expander(f"View Manual Page {p}", expanded=False):
+            with st.expander(f"View Official HR Manual Page {p}", expanded=False):
                 try:
                     img_bytes = render_page_image(p, dpi=160)
-                    st.image(img_bytes, caption=f"Enso Group HR Manual — Page {p}", use_container_width=True)
+                    st.image(img_bytes, caption=f"Enso Group HR Policy Manual — Page {p} (Official Document)", use_container_width=True)
                 except Exception as e:
                     st.error(f"Could not render page {p}: {e}")
 
-# ── Sidebar Navigation ──────────────────────────────────────────────
+# ── Sidebar Navigation & Diagnostics ────────────────────────────────
 with st.sidebar:
     st.markdown("""
-    <div class="sidebar-brand-name">Enso Group HR</div>
-    <div class="sidebar-brand-sub">Policy & Compliance Assistant</div>
+    <div class="sidebar-brand">
+        <span style="background:#2563eb; color:#fff; font-weight:800; font-size:0.75rem; padding:0.2rem 0.5rem; border-radius:4px;">ENSO</span>
+        <span style="font-weight:700; color:#f8fafc; font-size:0.95rem;">Group HR Portal</span>
+    </div>
+    <div style="font-size:0.75rem; color:#64748b; margin-bottom:1rem;">Governance & Employee Handbooks</div>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="sidebar-heading">Preset Questions</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-section-title">Verified MidSem Exam Queries</div>', unsafe_allow_html=True)
     exam_questions = [
-        ("Privilege Leave (PL) entitlement", "How many days of Privilege Leave (PL) does a permanent employee get per year?"),
-        ("Probation period (up to Senior Manager)", "What is the probation period for employees up to Senior Manager?"),
-        ("Health insurance premium amount", "What is the company's health-insurance premium amount?"),
-        ("Current GST rate in India", "What is the current GST rate in India?"),
-        ("Maternity leave entitlement", "How many days of maternity leave are given?"),
+        ("Privilege Leave (PL) Allowance", "How many days of Privilege Leave (PL) does a permanent employee get per year?"),
+        ("Probation Period (Up to Sr. Mgr)", "What is the probation period for employees up to Senior Manager?"),
+        ("Health Insurance Premium", "What is the company's health-insurance premium amount?"),
+        ("Current GST Rate in India", "What is the current GST rate in India?"),
+        ("Maternity Leave Entitlement", "How many days of maternity leave are given?"),
     ]
 
     for label, query in exam_questions:
@@ -384,35 +511,49 @@ with st.sidebar:
             st.session_state.pending_question = query
 
     st.markdown("---")
-    st.markdown('<div class="sidebar-heading">Settings</div>', unsafe_allow_html=True)
-    st.session_state.top_k = st.slider("Context passages", 3, 10, RETRIEVER_TOP_K)
-    st.session_state.show_evidence = st.toggle("Show retrieved passages", value=True)
+    st.markdown('<div class="sidebar-section-title">Governance Settings</div>', unsafe_allow_html=True)
+    st.session_state.top_k = st.slider("Retrieval Context Chunks", 3, 10, RETRIEVER_TOP_K)
+    st.session_state.show_evidence = st.toggle("Show Audit Trail / Evidence", value=True)
 
     st.markdown("---")
-    if st.button("Clear Chat", use_container_width=True):
+    if st.button("Clear Chat History", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
 
 # ── Main Content Area ───────────────────────────────────────────────
 if store is None:
-    st.error("The vector index has not been built yet. Run `python -m src.ingest --rebuild` to construct the index.")
+    st.error("The vector index has not been built yet. Run `python -m src.ingest --rebuild` to construct the ChromaDB index.")
     st.stop()
 
-# Handle Pending Question
-pending = st.session_state.pop("pending_question", None)
-user_input = st.chat_input("Enter policy query...")
-question = pending or user_input
-
-if question:
-    st.session_state.messages.append({"role": "user", "content": question})
-
-# Show clean empty state ONLY if there are no messages
+# If empty chat history, show Enterprise Welcome Hero
 if not st.session_state.messages:
     st.markdown("""
-    <div class="empty-state">
-        <div class="empty-state-title">How can I assist with company policy?</div>
-        <div class="empty-state-desc">
-            Ask any question regarding official Enso Group policies. Answers are extracted directly from the verified 79-page manual with page citations.
+    <div class="hero-card">
+        <div class="hero-title">Enso Group Policy Intelligence</div>
+        <div class="hero-description">
+            Ask any question regarding official company policies. All answers are strictly grounded in the 79-page HR Policy Manual with exact page and section citations. Outside hallucination is strictly disabled.
+        </div>
+        <div class="pillars-grid">
+            <div class="pillar-item">
+                <div class="pillar-tag">SECTION 1</div>
+                <div class="pillar-title">Leave & Absence</div>
+                <div class="pillar-sub">PL, CL, SL, Maternity & Bereavement rules</div>
+            </div>
+            <div class="pillar-item">
+                <div class="pillar-tag">SECTION 2</div>
+                <div class="pillar-title">Probation & Roles</div>
+                <div class="pillar-sub">3-month appraisal, confirmation criteria</div>
+            </div>
+            <div class="pillar-item">
+                <div class="pillar-tag">SECTION 3</div>
+                <div class="pillar-title">Health & Wellness</div>
+                <div class="pillar-sub">Workplace safety standards & protocols</div>
+            </div>
+            <div class="pillar-item">
+                <div class="pillar-tag">SECTION 4</div>
+                <div class="pillar-title">Code of Conduct</div>
+                <div class="pillar-sub">Grievance procedures & compliance guidelines</div>
+            </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -421,14 +562,24 @@ if not st.session_state.messages:
 for idx, msg in enumerate(st.session_state.messages):
     with st.chat_message(msg["role"]):
         if msg["role"] == "user":
-            st.markdown(msg["content"])
+            st.markdown(f"**Question:** {msg['content']}")
         else:
             render_answer(msg, idx)
 
-# Process New User Query
+# Check for button click from sidebar
+pending = st.session_state.pop("pending_question", None)
+user_input = st.chat_input("Enter employee query (e.g. 'How many days of Privilege Leave does a permanent employee get?')...")
+question = pending or user_input
+
 if question:
+    # Append and render user query
+    st.session_state.messages.append({"role": "user", "content": question})
+    with st.chat_message("user"):
+        st.markdown(f"**Question:** {question}")
+
+    # Process and render assistant answer
     with st.chat_message("assistant"):
-        with st.spinner("Searching HR manual..."):
+        with st.spinner("Analyzing verified HR Manual clauses..."):
             try:
                 result = ask(
                     question,
