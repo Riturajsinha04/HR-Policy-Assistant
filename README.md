@@ -21,7 +21,6 @@
 8. [Exam Q&A Evaluation Results](#exam-qa-evaluation-results)
 9. [UI Preview & Verification](#ui-preview--verification)
 10. [Design Decisions & Trade-offs](#design-decisions--trade-offs)
-11. [Author & Academic Details](#author--academic-details)
 
 ---
 
@@ -329,13 +328,3 @@ The application features a modern Streamlit interface designed for auditability 
 ### Limitations & Future Enhancements
 - **Reranker Integration**: Incorporating a cross-encoder reranker (e.g., `bge-reranker-base`) would further boost precision on dense policy comparisons.
 - **Multi-Lingual Support**: Extending support for regional languages using multilingual embedding models.
-
----
-
-## Author & Academic Details
-
-- **Student Name**: Rituraj Sinha
-- **Course**: Generative AI Mid-Semester Examination
-- **Project**: Enso Group HR Policy Assistant (RAG System - Project 1)
-- **Institution**: Amity University / Center for AI Studies
-- **Submission Date**: October 2026
