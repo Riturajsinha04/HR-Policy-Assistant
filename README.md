@@ -285,7 +285,6 @@ The table below demonstrates the system's performance on the 5 mandatory exam qu
 The application features a modern Streamlit interface designed for auditability and compliance:
 
 ### UI Overview
-<!-- TODO: add screenshot -->
 ![UI Home](docs/screenshots/ui_home.png)
 *Figure 1: Enso Group HR Policy Assistant main interface featuring chat history and policy navigation sidebar.*
 
@@ -294,27 +293,22 @@ The application features a modern Streamlit interface designed for auditability 
 ### Individual Question Screenshots
 
 #### Q1: Privilege Leave Entitlement
-<!-- TODO: add screenshot -->
 ![Q1: Privilege Leave](docs/screenshots/q1_privilege_leave.png)
 *Figure 2: Q1 query showing 12 days entitlement, no carry-forward condition, and Page 60 citation.*
 
 #### Q2: Probation Period
-<!-- TODO: add screenshot -->
 ![Q2: Probation Period](docs/screenshots/q2_probation.png)
 *Figure 3: Q2 query showing 3 months probation for employees up to Senior Manager on Page 42.*
 
 #### Q3: Health Insurance Premium (In-Document Absence)
-<!-- TODO: add screenshot -->
 ![Q3: Health Insurance](docs/screenshots/q3_health_insurance.png)
 *Figure 4: Q3 query returning strictly "Not found" despite semantically near health policy chunks.*
 
 #### Q4: Current GST Rate (Out-of-Scope Query)
-<!-- TODO: add screenshot -->
 ![Q4: GST Rate](docs/screenshots/q4_gst.png)
 *Figure 5: Q4 query returning strictly "Not found" with layer 1 relevance rejection.*
 
 #### Q5: Maternity Leave Entitlement
-<!-- TODO: add screenshot -->
 ![Q5: Maternity Leave](docs/screenshots/q5_maternity.png)
 *Figure 6: Q5 query showing 12 weeks (90 days) maternity leave entitlement and Page 62 citation.*
 

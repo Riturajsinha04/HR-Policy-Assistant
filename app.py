@@ -3,10 +3,17 @@ Streamlit UI for the Enso Group HR Policy Assistant.
 Run: streamlit run app.py
 """
 
+import importlib
 import logging
+import os
 import time
 
 import streamlit as st
+
+import src.config
+import src.rag_chain
+importlib.reload(src.config)
+importlib.reload(src.rag_chain)
 
 from src.config import (
     CHROMA_DIR,
@@ -47,19 +54,21 @@ st.markdown("""
 
     .answer-card {
         background: #f0fdf4; border: 1px solid #86efac; border-left: 4px solid #22c55e;
+        color: #14532d !important; font-size: 0.95rem; line-height: 1.5; font-weight: 500;
         padding: 1.2rem 1.5rem; border-radius: 8px; margin: 0.8rem 0;
     }
     .answer-card-notfound {
         background: #fefce8; border: 1px solid #fde68a; border-left: 4px solid #f59e0b;
+        color: #78350f !important; font-size: 0.95rem; line-height: 1.5; font-weight: 600;
         padding: 1.2rem 1.5rem; border-radius: 8px; margin: 0.8rem 0;
     }
     .badge-found {
-        display: inline-block; background: #22c55e; color: white;
+        display: inline-block; background: #22c55e; color: white !important;
         padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;
         font-weight: 600; margin-bottom: 0.6rem;
     }
     .badge-notfound {
-        display: inline-block; background: #f59e0b; color: white;
+        display: inline-block; background: #f59e0b; color: white !important;
         padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;
         font-weight: 600; margin-bottom: 0.6rem;
     }
@@ -111,7 +120,9 @@ def render_answer(msg: dict, msg_idx: int) -> None:
     citations = result.get("citations", [])
     chunks = result.get("retrieved_chunks", [])
 
-    if found:
+    if answer.startswith("Error:"):
+        st.error(answer)
+    elif found:
         parts = answer.split("\n\nReference: ")
         main_answer = parts[0]
         ref_text = parts[1] if len(parts) > 1 else ""
@@ -184,8 +195,8 @@ with st.sidebar:
     store, doc_count = load_store()
     if store:
         st.markdown("#### 📊 Index Status")
-        st.success(f"✅ {doc_count} chunks indexed")
-        st.caption(f"Model: `{GEMINI_MODEL}`")
+        current_model = os.getenv("GEMINI_MODEL", GEMINI_MODEL)
+        st.caption(f"Model: `{current_model}`")
         st.caption(f"Embeddings: `{EMBEDDING_MODEL.split('/')[-1]}`")
     else:
         st.error("❌ Index not built")

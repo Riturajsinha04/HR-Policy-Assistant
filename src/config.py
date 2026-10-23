@@ -19,7 +19,8 @@ COLLECTION_NAME = "hr_manual"
 
 # ── LLM ──────────────────────────────────────────────────────────────
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
+_model_env = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
+GEMINI_MODEL = "gemini-3.5-flash" if _model_env in ("gemini-2.0-flash", "gemini-2.0-flash-exp") else _model_env
 LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0"))
 
 # ── Embeddings ───────────────────────────────────────────────────────

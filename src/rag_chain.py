@@ -148,7 +148,15 @@ class _MockLLM:
 def _get_llm() -> Any:
     """Initialize the Gemini LLM (or mock for offline tests)."""
     import os
-    if not GOOGLE_API_KEY:
+    from dotenv import load_dotenv
+    load_dotenv(override=True)
+    api_key = os.getenv("GOOGLE_API_KEY", GOOGLE_API_KEY)
+    model = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
+    if model in ("gemini-2.0-flash", "gemini-2.0-flash-exp"):
+        model = "gemini-3.5-flash"
+    temp = float(os.getenv("LLM_TEMPERATURE", str(LLM_TEMPERATURE)))
+
+    if not api_key:
         if os.getenv("MOCK_LLM_FOR_TESTS") == "1":
             return _MockLLM()
         raise ValueError(
@@ -156,9 +164,9 @@ def _get_llm() -> Any:
             "See .env.example for the format."
         )
     return ChatGoogleGenerativeAI(
-        model=GEMINI_MODEL,
-        google_api_key=GOOGLE_API_KEY,
-        temperature=LLM_TEMPERATURE,
+        model=model,
+        google_api_key=api_key,
+        temperature=temp,
         convert_system_message_to_human=False,
     )
 
